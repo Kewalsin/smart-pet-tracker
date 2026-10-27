@@ -33,6 +33,11 @@
 ### 3. 📊 Activity Analytics & Interactive SVG Charts
 - **7-Day Dynamic Bar Charts**: Rendered with `react-native-svg` without external charting bloat, featuring goal baselines and day-by-day highlights.
 - Metrics calculated from raw telemetry: total steps, cumulative distance, active minutes, and calories burned.
+- **GitHub-Style Contribution Heatmap Matrix (2023 - 2026)**:
+  - Multi-year daily contribution grid displaying historical consistency across 4 green heat tiers (empty/gray, light green, medium green, and deep dark forest green).
+  - Year selector tabs (`2026`, `2025`, `2024`, `2023`).
+  - Annual stats summary: Total Yearly Steps, Total Distance, Longest Active Streak (days), and Goal Met count.
+  - Interactive day selection popup displaying exact date, step count, distance, active minutes, and calories.
 - Day, Week, and Month time-scale filters with activity category breakdowns (Walking, Play, Rest).
 
 ### 4. 🩺 Veterinary & Health Records

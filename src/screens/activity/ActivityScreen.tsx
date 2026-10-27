@@ -11,6 +11,7 @@ import { AppIcon } from '../../components/common/AppIcon';
 import { PetSelector } from '../../components/pet/PetSelector';
 import { ActivityWeeklyChart } from '../../components/activity/ActivityWeeklyChart';
 import { ActivityMetricCard } from '../../components/activity/ActivityMetricCard';
+import { ActivityHeatmap } from '../../components/activity/ActivityHeatmap';
 import { calculateWeeklyTotals, formatDistance } from '../../utils/calculations';
 import { formatDate } from '../../utils/dateUtils';
 import { ActivityFilterPeriod } from '../../types';
@@ -27,6 +28,7 @@ export const ActivityScreen: React.FC = () => {
 
   const [period, setPeriod] = useState<ActivityFilterPeriod>('week');
   const [chartMetric, setChartMetric] = useState<'steps' | 'distance'>('steps');
+  const [historyLimit, setHistoryLimit] = useState(15);
 
   // Filter records for active pet
   const petRecords = activityRecords.filter((r) => r.petId === activePet?.id);
@@ -166,6 +168,13 @@ export const ActivityScreen: React.FC = () => {
           />
         </AppCard>
 
+        {/* Multi-Year Activity Heatmap (2023 - 2026) */}
+        <ActivityHeatmap
+          records={petRecords}
+          goal={8000}
+          initialYear={2026}
+        />
+
         {/* Activity Breakdown Breakdown */}
         <AppCard style={styles.breakdownCard} padding="md">
           <AppText variant="title" style={styles.sectionTitle}>
@@ -196,11 +205,11 @@ export const ActivityScreen: React.FC = () => {
         <View style={styles.sectionHeader}>
           <AppText variant="title">Activity History</AppText>
           <AppText variant="caption" color="muted">
-            {petRecords.length} records
+            Showing {Math.min(historyLimit, petRecords.length)} of {petRecords.length} records
           </AppText>
         </View>
 
-        {petRecords.map((item) => (
+        {petRecords.slice(0, historyLimit).map((item) => (
           <AppCard key={item.id} style={styles.logCard} padding="sm">
             <View style={styles.logRow}>
               <View
@@ -228,6 +237,23 @@ export const ActivityScreen: React.FC = () => {
             </View>
           </AppCard>
         ))}
+
+        {historyLimit < petRecords.length && (
+          <TouchableOpacity
+            onPress={() => setHistoryLimit((prev) => prev + 25)}
+            style={[
+              styles.loadMoreBtn,
+              {
+                backgroundColor: theme.colors.cardAlt,
+                borderColor: theme.colors.border,
+              },
+            ]}
+          >
+            <AppText variant="captionBold" color="brand">
+              Load More History ({petRecords.length - historyLimit} remaining)
+            </AppText>
+          </TouchableOpacity>
+        )}
       </AppScrollView>
     </ScreenContainer>
   );
@@ -338,5 +364,13 @@ const styles = StyleSheet.create({
   },
   logRight: {
     alignItems: 'flex-end',
+  },
+  loadMoreBtn: {
+    paddingVertical: 12,
+    alignItems: 'center',
+    borderRadius: 12,
+    borderWidth: 1,
+    marginTop: 8,
+    marginBottom: 16,
   },
 });
